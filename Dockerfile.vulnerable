@@ -1,0 +1,23 @@
+# Single Stage only
+
+# Large image
+
+FROM node:22-bullseye
+
+WORKDIR /app
+
+# Build tools inside final image
+
+RUN apt-get update && apt-get install -y git && \
+    git clone https://github.com/juice-shop/juice-shop.git /app && \
+    cd /app && npm install
+
+COPY . /app
+RUN npm install
+
+# Does not clean unused files
+
+# Root Execution
+
+EXPOSE 3000
+CMD ["npm", "start"]

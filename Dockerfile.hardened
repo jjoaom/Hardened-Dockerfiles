@@ -1,0 +1,48 @@
+# Multi stage
+
+# Stage 1 - Build
+
+# Smaller image
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Git only during build stage
+RUN apk add --no-cache git
+
+# Clone the last version of the repository
+RUN git clone --depth=1 https://github.com/juice-shop/juice-shop.git .
+
+# Remove Development dependencies
+RUN npm install --omit=dev
+
+# Stage 2 - Runtime
+
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Define Environment Variables for Production Environmnet
+ENV NODE_ENV=production
+
+# Create group and non-root user
+# -S create system account (no login)
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Copy artifacts from build
+COPY --from=builder /app /app
+
+# Adjust permissions for non-root user
+RUN chown -R appuser:appgroup /app
+
+# Container does not run as root
+USER appuser
+
+EXPOSE 3000
+
+# Container Healthcheck 
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:3000 || exit 1
+
+# Execute Node directly (avoids extra layer execution)
+CMD ["node", "server.js"]
