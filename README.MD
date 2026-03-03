@@ -149,9 +149,7 @@ Example (fixable only):
 
 
 | Total | Fixable | Critical | High | Medium | Low | Unknown |
-
 |--------|----------|----------|--------|---------|------|----------|
-
 | 3301 | 236 | 134 | 610 | 1426 | 1129 | 2 |
 
 
@@ -161,9 +159,7 @@ Example (fixable only):
 
 
 | Total | Fixable | Critical | High | Medium | Low | Unknown |
-
 |--------|----------|----------|--------|---------|------|----------|
-
 | 119 | 113 | 11 | 58 | 45 | 5 | 0 |
 
 
